@@ -1,0 +1,49 @@
+<div class="card border-primary mb-3 text-center">   
+  <div class="card-header">Lista de Productos</div>
+  <div class="card-body text-primary">
+    <div class="table-responsive">
+      
+      @if (products && products.length) {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                <button class="btn btn-primary" (click)="toggleImage()">
+                  <i-bs name="eye"></i-bs>
+                  {{ showImage ? 'Ocultar' : 'Mostrar' }} Imagenes
+                </button>
+              </th>
+              <th>Producto</th>
+              <th>Codigo</th>
+              <th>Disponible</th>
+              <th>Precio</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (producto of products; track producto.productID) {
+              <tr>
+                <td>
+                  @if (showImage) {
+                    <img [src]="producto.imageUrl" 
+                         [alt]="producto.productName"
+                         [style.width.px]="imageWidth"
+                         [style.height.px]="imageHeight"
+                         [style.margin.px]="imageMargin">
+                  }
+                </td>
+                <td>{{ producto.productName }}</td>
+                <td>{{ producto.productCode }}</td>
+                <td>{{ producto.releaseDate }}</td>
+                <td>{{ producto.price }}</td>
+                <td>{{ producto.starRating }}</td>
+              </tr> }
+          </tbody>
+        </table>  
+      } @else {
+        <p>No hay productos que coincidan con la búsqueda.</p>
+      }
+      
+    </div>
+  </div>
+</div>
