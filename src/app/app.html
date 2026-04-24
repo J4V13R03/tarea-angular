@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand navbar-dark bg-primary mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="logo.png" width="200" alt="ACME Logo">
+    </a>
+    <span class="navbar-text h4 mb-0 text-white">
+      {{ title() }}
+    </span>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="card mb-4 shadow-sm">
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-auto">
+          <label class="form-label mb-0">Filtrar por:</label>
+        </div>
+        <div class="col-md-3">
+          <input type="text" 
+                 class="form-control" 
+                 placeholder="Escribe para buscar..."
+                 [(ngModel)]="listFilter">
+        </div>
+        <div class="col-md-4">
+          <h5 class="mb-0 text-muted">Buscando: {{ listFilter() }}</h5>
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-primary" (click)="toggleChildren()">
+             <i class="bi bi-eye"></i>
+             {{ showChildren() ? 'Ocultar' : 'Mostrar' }} Hijo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (showChildren()){
+    <app-product-list 
+      [datos]="filteredProducts()" 
+      (datoEmitido)="datoRecibido.set($event)"
+      (productDeleted)="borrarProducto($event)"
+      (productUpdated)="actualizarProducto($event)">
+    </app-product-list>
+  }
+
+  @if (datoRecibido()) {
+    <div class="alert alert-secondary mt-2">
+      Estado: {{ datoRecibido() }}
+    </div>
+  }
+</div>
