@@ -1,52 +1,100 @@
-<nav class="navbar navbar-expand navbar-dark bg-primary mb-4">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="logo.png" width="200" alt="ACME Logo">
-    </a>
-    <span class="navbar-text h4 mb-0 text-white">
-      {{ title() }}
-    </span>
-  </div>
-</nav>
+<!-- ========== DASHBOARD (autenticado) ========== -->
+@if (authService.isAutenticated()) {
+<div class="d-flex" id="wrapper">
 
-<div class="container-fluid">
-  <div class="card mb-4 shadow-sm">
-    <div class="card-body">
-      <div class="row align-items-center">
-        <div class="col-auto">
-          <label class="form-label mb-0">Filtrar por:</label>
-        </div>
-        <div class="col-md-3">
-          <input type="text" 
-                 class="form-control" 
-                 placeholder="Escribe para buscar..."
-                 [(ngModel)]="listFilter">
-        </div>
-        <div class="col-md-4">
-          <h5 class="mb-0 text-muted">Buscando: {{ listFilter() }}</h5>
-        </div>
-        <div class="col-md-4">
-          <button class="btn btn-primary" (click)="toggleChildren()">
-             <i class="bi bi-eye"></i>
-             {{ showChildren() ? 'Ocultar' : 'Mostrar' }} Hijo
-          </button>
+    <!-- Sidebar -->
+    <!----------------------------------------------------->
+    <div class="bg-light border-end" id="sidebar-wrapper">
+      <div class="sidebar-heading">
+        <div class="user-panel">
+          <div class="image">
+            <img width="100" alt="ACME Logo" class="rounded-circle" src="logo.png">
+          </div>
+          <div>
+            <p id="titulo">{{ title() }}</p>
+          </div>
         </div>
       </div>
+
+      <!-- Menu -->
+      <div class="sidebar left ">
+        <ul class="list-sidebar bg-defoult">
+          <li><a [routerLink]="['home']"><i class="bi bi-house-door-fill"></i>Home</a>
+          </li>
+          <li>
+            <a href="#" data-bs-toggle="collapse" data-bs-target="#productos" class="collapsed active">
+              <i class="bi bi-grid-fill"></i>
+              <span class="nav-label">Productos</span>
+              <span class="bi bi-chevron-right"></span>
+            </a>
+            <ul class="sub-menu collapse" id="productos">
+              <li><a [routerLink]="['products']"><i class="bi bi-cart-fill"></i>Administrar</a></li>
+              <li><a href="">Ver fichas</a></li>
+              <li><a routerLink="/product-pagination"> Informes</a></li>
+            </ul>
+          </li>
+          <li> <a href="#"><i class="bi bi-speedometer"></i><span class="nav-label">Dashboard</span></a> </li>
+          <li> <a href="#" data-bs-toggle="collapse" data-bs-target="#usuarios" class="collapsed active"><i
+                class="bi bi-person"></i> <span class="nav-label">Usuarios</span><span
+                class="bi bi-chevron-right"></span></a>
+            <ul class="sub-menu collapse" id="usuarios">
+              <li><a [routerLink]="['users']"> Administrar</a></li>
+              <li><a [routerLink]="['maps']">Ver mapas</a></li>
+              <li><a href=""> Ver fichas</a></li>
+              <li><a href=""> Informes</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
     </div>
+
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <!-- Superior Bar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+
+        <!-- Superior menu -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Dropdown
+              </a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" style="cursor: pointer;" (click)="logout()">Cerrar Sesión</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Inner Content -->
+      <br>
+      <div class="container-fluid">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
   </div>
-
-  @if (showChildren()){
-    <app-product-list 
-      [datos]="filteredProducts()" 
-      (datoEmitido)="datoRecibido.set($event)"
-      (productDeleted)="borrarProducto($event)"
-      (productUpdated)="actualizarProducto($event)">
-    </app-product-list>
-  }
-
-  @if (datoRecibido()) {
-    <div class="alert alert-secondary mt-2">
-      Estado: {{ datoRecibido() }}
-    </div>
-  }
-</div>
+  <!-- /#wrapper -->
+} @else {
+  <!-- ========== LOGIN (no autenticado) ========== -->
+  <router-outlet></router-outlet>
+}

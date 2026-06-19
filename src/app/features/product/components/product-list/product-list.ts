@@ -1,20 +1,18 @@
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
-import { IProduct } from '../../product';   
-import { StarComponent } from '../../shared/star/star.component';
-import { DatePipe} from '@angular/common';
-import { ImagePipe } from '../../shared/image-pipe';
+import { DatePipe } from '@angular/common';
+import { IProduct } from '../../interfaces/product';
+import { StarComponent } from '../../../../shared/star/star.component';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [StarComponent, DatePipe, ImagePipe],
+  imports: [StarComponent, DatePipe],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
 })
 export class ProductList {
-  
-  @Input('datos') products: IProduct[] = [];  
-  
+
+  @Input('datos') products: IProduct[] = [];
 
   @Output() datoEmitido = new EventEmitter<string>();
   @Output() productDeleted = new EventEmitter<number>();
@@ -24,7 +22,7 @@ export class ProductList {
 
   constructor() { console.log('Hijo: constructor'); }
   ngOnInit(): void { console.log('Hijo: ngOnInit'); }
-  
+
   toggleImage(): void {
     this.showImage.update(value => !value);
     this.datoEmitido.emit(this.showImage() ? 'Imágenes visibles' : 'Imágenes ocultas');

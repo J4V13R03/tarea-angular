@@ -6,13 +6,13 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Weather {
   apiKey: string = 'e7f5a7974d3c2226936512aba7480088';
-  URI: string = 'https://api.openweathermap.org/data/2.5/weather?appid=${this.apiKey}&units=metric&q=';
+  URI: string = `https://api.openweathermap.org/data/2.5/weather?appid=${this.apiKey}&units=metric&q=`;
 
 
   constructor(private http: HttpClient) {}
 
   getWeather(city: string, country: string) {
-    console.log('Obteniendor clima para: ${city},${country}');
+    console.log(`Obteniendo clima para: ${city},${country}`);
     return this.http.get(this.URI + `${city},${country}`);
   }
 
