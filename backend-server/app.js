@@ -6,7 +6,9 @@ const cors = require('cors');
 const path = require('path');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
 let SEED = "esta-es-una-semilla-para-generar-el-token";
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const e = require('express');
 
 var app = express();
@@ -78,6 +80,78 @@ app.post('/login', (req, res) => {
             });
         }  
     });
+});
+
+// Verificar el token de Google
+async function verifyGoogleToken(token) {
+    const client = new OAuth2Client(GOOGLE_CLIENT_ID);
+    const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    console.log(payload);
+    return {
+        name: payload.name,
+        email: payload.email,
+        picture: payload.picture
+    };
+}
+
+// Login con Google
+app.post('/google-login', async (req, res) => {
+    const { token } = req.body;
+    console.log('Token recibido: ' + token);
+    try {
+        const { name, email, picture } = await verifyGoogleToken(token);
+        conn.query('SELECT * FROM usuarios WHERE userEmail = ?', [email], (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al consultar la base de datos',
+                    error: err
+                });
+            }
+            if (results.length === 0 || !results.length) {
+                console.log('Usuario no encontrado -> creando nuevo usuario');
+                let datosUsuario = {
+                    userName: name,
+                    userEmail: email,
+                    userImg: picture,
+                };
+                conn.query('INSERT INTO usuarios SET ?', datosUsuario, (err, result) => {
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error al crear el usuario',
+                            error: err
+                        });
+                    }
+                    res.status(201).json({
+                        ok: true,
+                        mensaje: 'Usuario creado correctamente'
+                    });
+                });
+            } else {
+                console.log('Usuario encontrado');
+                console.log('Generar token para el usuario');
+                const user = results[0];
+                const token = jwt.sign({ usuario: user }, SEED, { expiresIn: 14400 });
+                res.status(200).json({
+                    ok: true,
+                    mensaje: 'Login exitoso',
+                    usuario: user,
+                    token: token
+                });
+            }
+        });
+    } catch (error) {
+        res.status(401).json({
+            ok: false,
+            mensaje: 'Token no válido',
+            error: error
+        });
+    }
 });
 
 app.use(function (req, res, next) {
