@@ -22,3 +22,7 @@ Thumbs.db
 
 # Archivos de caché de TypeScript
 *.tsbuildinfo
+
+# Environment files (contienen secrets)
+src/environments/environment.ts
+src/environments/environment.development.ts

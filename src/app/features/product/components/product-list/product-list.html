@@ -37,7 +37,7 @@
                         </td>
                         <td class="text-truncate" style="max-width: 150px;">{{ producto.productName }}</td>
                         <td><span class="text-muted small">{{ producto.productCode }}</span></td>
-                        <td>{{ producto.releaseDate | date:'dd/MM/yyyy' }}</td>
+                        <td>{{ producto.releaseDate }}</td>
                         <td>{{ producto.price}}</td>
                         <td><app-star [rating]="producto.starRating"></app-star></td>
                         

@@ -1,6 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
-import { AuthService } from './features/auth/services/auth';
+import { Auth } from './features/auth/services/auth';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { AuthService } from './features/auth/services/auth';
 })
 export class App {
   title = signal('Empresa ACME');
-  authService = inject(AuthService);
+  authService = inject(Auth);
   private router = inject(Router);
 
   logout() {

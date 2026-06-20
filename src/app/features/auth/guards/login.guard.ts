@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth';
+import { Auth } from '../services/auth';
 
 export const loginGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const authService = inject(Auth);
   const router = inject(Router);
 
   // Si la señal reactiva indica que está autenticado, permite el paso
